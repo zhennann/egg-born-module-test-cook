@@ -58,9 +58,11 @@ module.exports = app => {
 
     async init(options) {
       if (options.version === 1) {
-        // types
-        for (const name of [ 'Breakfast', 'Lunch', 'Dinner' ]) {
-          await this.ctx.model.cookType.insert({ name });
+        if (this.app.meta.isTest || this.app.meta.isLocal) {
+          // types
+          for (const name of [ 'Breakfast', 'Lunch', 'Dinner' ]) {
+            await this.ctx.model.cookType.insert({ name });
+          }
         }
       }
     }
