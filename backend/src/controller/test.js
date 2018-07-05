@@ -37,7 +37,7 @@ module.exports = app => {
       // Tom list all
       let list = await this.ctx.meta.function.list({
         options: {
-          where: { },
+          where: { 'a.module': 'test-cook' },
           orders: [[ 'id', 'asc' ]],
           page: { index: 0, size: 20 },
           locale: '',
@@ -50,7 +50,7 @@ module.exports = app => {
       // Tom menu list zh-cn
       list = await this.ctx.meta.function.list({
         options: {
-          where: { },
+          where: { 'a.module': 'test-cook' },
           orders: [[ 'id', 'asc' ]],
           page: { index: 0, size: 20 },
           locale: 'zh-cn',
@@ -67,17 +67,35 @@ module.exports = app => {
       await this.ctx.meta.function.clearLocales();
 
       // select star
-      list = await this.ctx.meta.function.list({ user: userTom, options: { star: 1 } });
+      list = await this.ctx.meta.function.list({
+        user: userTom,
+        options: {
+          where: { 'a.module': 'test-cook' },
+          star: 1,
+        },
+      });
       assert(list.length === 0);
 
       // star 1
       await this.ctx.meta.function.star({ id: function1.id, star: 1, user: userTom });
-      list = await this.ctx.meta.function.list({ user: userTom, options: { star: 1 } });
+      list = await this.ctx.meta.function.list({
+        user: userTom,
+        options: {
+          where: { 'a.module': 'test-cook' },
+          star: 1,
+        },
+      });
       assert(list.length === 1);
 
       // star 0
       await this.ctx.meta.function.star({ id: function1.id, star: 0, user: userTom });
-      list = await this.ctx.meta.function.list({ user: userTom, options: { star: 1 } });
+      list = await this.ctx.meta.function.list({
+        user: userTom,
+        options: {
+          where: { 'a.module': 'test-cook' },
+          star: 1,
+        },
+      });
       assert(list.length === 0);
 
       // check
@@ -103,7 +121,7 @@ module.exports = app => {
       // Tom list all
       const list = await this.ctx.meta.function.list({
         options: {
-          where: { 'a.public': 1 },
+          where: { 'a.module': 'test-cook', 'a.public': 1 },
           orders: [[ 'id', 'asc' ]],
           page: { index: 0, size: 20 },
           locale: '',
