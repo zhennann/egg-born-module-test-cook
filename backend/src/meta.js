@@ -84,6 +84,7 @@ module.exports = app => {
             info: {
               tableName: 'testCookPublic',
               public: 1,
+              flow: 1,
             },
           },
         },

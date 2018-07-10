@@ -424,17 +424,13 @@ module.exports = app => {
 
       await this._testCheckList(userIds, [
         [ 'Tom', 1 ],
-        [ 'Jane', 1 ],
-        [ 'Jimmy', 1 ],
-        [ 'Smith', 1 ],
+        [ 'Jane', 0 ],
+        [ 'Jimmy', 0 ],
+        [ 'Smith', 0 ],
       ]);
 
-      // Tom get cook:egg
-      const cook = await this.ctx.meta.atom.read({ key: cookKey, user: { id: userIds.Jane } });
-      assert(cook);
-
       // checkRightRead 1
-      const checkRightReads = [[ 'Jane', cookKey.atomId, true ]];
+      let checkRightReads = [[ 'Jane', cookKey.atomId, false ]];
       for (const [ userName, atomId, right ] of checkRightReads) {
         const res = await this.ctx.meta.atom.checkRightRead({
           atom: { id: atomId },
@@ -442,6 +438,36 @@ module.exports = app => {
         });
         assert(!!res === right);
       }
+
+      // flow cook:egg
+      await this.ctx.meta.atom.flow({
+        key: cookKey,
+        atom: {
+          atomFlow: 0,
+        },
+        user: { id: userIds.Tom },
+      });
+
+      await this._testCheckList(userIds, [
+        [ 'Tom', 1 ],
+        [ 'Jane', 1 ],
+        [ 'Jimmy', 1 ],
+        [ 'Smith', 1 ],
+      ]);
+
+      // checkRightRead 2
+      checkRightReads = [[ 'Jane', cookKey.atomId, true ]];
+      for (const [ userName, atomId, right ] of checkRightReads) {
+        const res = await this.ctx.meta.atom.checkRightRead({
+          atom: { id: atomId },
+          user: { id: userIds[userName] },
+        });
+        assert(!!res === right);
+      }
+
+      // Tom get cook:egg
+      const cook = await this.ctx.meta.atom.read({ key: cookKey, user: { id: userIds.Jane } });
+      assert(cook);
 
       // Tom delete cook:egg
       await this.ctx.meta.atom.delete({
