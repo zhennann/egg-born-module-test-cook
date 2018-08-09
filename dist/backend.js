@@ -82,7 +82,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -93,181 +93,56 @@ module.exports = require("require3");
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
+const config = __webpack_require__(2);
+const locales = __webpack_require__(3);
+const errors = __webpack_require__(5);
+const middlewares = __webpack_require__(6);
+
+// eslint-disable-next-line
 module.exports = app => {
-  const schemas = {};
-  // cook
-  schemas.cook = {
-    type: 'object',
-    properties: {
-      atomName: {
-        type: 'string',
-        ebType: 'text',
-        ebTitle: 'Cook Name',
-        notEmpty: true,
-      },
-      cookCount: {
-        type: 'number',
-        ebType: 'text',
-        ebTitle: 'Cook Count',
-        notEmpty: true,
-      },
-      cookTypeId: {
-        type: 'number',
-        ebType: 'select',
-        ebTitle: 'Cook Type',
-        ebOptionsUrl: '/test/cook/cook/types',
-        ebOptionsUrlParams: { empty: true },
-        ebOptionTitleKey: 'name',
-        ebOptionValueKey: 'id',
-        notEmpty: true,
-      },
-    },
-  };
-  // cook search
-  schemas.cookSearch = {
-    type: 'object',
-    properties: {
-      cookTypeId: {
-        type: 'number',
-        ebType: 'select',
-        ebTitle: 'Cook Type',
-        ebOptionsUrl: '/test/cook/cook/types',
-        ebOptionsUrlParams: { empty: true },
-        ebOptionTitleKey: 'name',
-        ebOptionValueKey: 'id',
-      },
-    },
+
+  // routes
+  const routes = __webpack_require__(7)(app);
+  // services
+  const services = __webpack_require__(12)(app);
+  // models
+  const models = __webpack_require__(18)(app);
+  // meta
+  const meta = __webpack_require__(22)(app);
+
+  return {
+    routes,
+    services,
+    models,
+    config,
+    locales,
+    errors,
+    middlewares,
+    meta,
   };
 
-  return schemas;
 };
 
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-const require3 = __webpack_require__(0);
-const extend = require3('extend2');
-
-module.exports = app => {
-  const meta = {
-  };
-  if (app.meta.isTest || app.meta.isLocal) {
-    // schemas
-    const schemas = __webpack_require__(1)(app);
-    // meta
-    extend(true, meta, {
-      base: {
-        atoms: {
-          cook: {
-            info: {
-              title: 'Cook',
-              tableName: 'testCookView',
-            },
-            actions: {
-              review: {
-                code: 101,
-                title: 'Review',
-                flag: '1',
-              },
-            },
-            flags: {
-              1: {
-                title: 'Reviewing',
-              },
-              2: {
-                title: 'Reviewed',
-              },
-            },
-            validator: 'cook',
-            search: {
-              validator: 'cookSearch',
-            },
-          },
-        },
-        functions: {
-          createCook: {
-            title: 'Create Cook',
-            scene: 'create',
-            autoRight: 1,
-            atomClassName: 'cook',
-            action: 'create',
-            sorting: 1,
-            menu: 1,
-          },
-          listCook: {
-            title: 'Cook List',
-            scene: 'list',
-            autoRight: 1,
-            atomClassName: 'cook',
-            action: 'read',
-            sorting: 1,
-            menu: 1,
-          },
-        },
-      },
-      validation: {
-        validators: {
-          cook: {
-            schemas: 'cook',
-          },
-          cookSearch: {
-            schemas: 'cookSearch',
-          },
-        },
-        keywords: {},
-        schemas: {
-          cook: schemas.cook,
-          cookSearch: schemas.cookSearch,
-        },
-      },
-    });
-  }
-  if (app.meta.isTest) {
-    // meta
-    extend(true, meta, {
-      base: {
-        atoms: {
-          cookPublic: {
-            info: {
-              tableName: 'testCookPublic',
-              public: 1,
-              flow: 1,
-            },
-          },
-        },
-        functions: {
-          testPublic: {
-            scene: 'tools',
-            menu: 1,
-            public: 1,
-          },
-        },
-      },
-    });
-  }
-  return meta;
+// eslint-disable-next-line
+module.exports = appInfo => {
+  const config = {};
+  return config;
 };
 
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = app => {
-
-  class CookPublic extends app.meta.Model {
-
-    constructor(ctx) {
-      super(ctx, { table: 'testCookPublic', options: { disableDeleted: false } });
-    }
-
-  }
-
-  return CookPublic;
+module.exports = {
+  'zh-cn': __webpack_require__(4),
 };
 
 
@@ -275,17 +150,16 @@ module.exports = app => {
 /* 4 */
 /***/ (function(module, exports) {
 
-module.exports = app => {
-
-  class CookType extends app.meta.Model {
-
-    constructor(ctx) {
-      super(ctx, { table: 'testCookType', options: { disableDeleted: true } });
-    }
-
-  }
-
-  return CookType;
+module.exports = {
+  'Create Cook': '新建烹饪',
+  'Cook List': '烹饪列表',
+  Cook: '烹饪',
+  Review: '评审',
+  Reviewing: '评审中',
+  Reviewed: '已评审',
+  Breakfast: '早餐',
+  Lunch: '午餐',
+  Dinner: '晚餐',
 };
 
 
@@ -293,70 +167,82 @@ module.exports = app => {
 /* 5 */
 /***/ (function(module, exports) {
 
-module.exports = app => {
-
-  class Cook extends app.meta.Model {
-
-    constructor(ctx) {
-      super(ctx, { table: 'testCook', options: { disableDeleted: false } });
-    }
-
-  }
-
-  return Cook;
+// error code should start from 1001
+module.exports = {
 };
 
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-const cook = __webpack_require__(5);
-const cookType = __webpack_require__(4);
-const cookPublic = __webpack_require__(3);
-
-module.exports = app => {
-  const models = {
-  };
-  if (app.meta.isTest || app.meta.isLocal) {
-    Object.assign(models, {
-      cook,
-      cookType,
-      cookPublic,
-    });
-  }
-  return models;
+module.exports = {
 };
 
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+const version = __webpack_require__(8);
+const cook = __webpack_require__(9);
+const test = __webpack_require__(10);
+const cookPublic = __webpack_require__(11);
 
 module.exports = app => {
-
-  class CookPublic extends app.Service {
-
-    async create({ atomClass, key, atom, user }) {
-      const res = await this.ctx.model.cookPublic.insert({
-        atomId: key.atomId,
-      });
-      return { atomId: key.atomId, itemId: res.insertId };
-    }
-
-    async write({ atomClass, key, item, validation, user }) {
-    }
-
-    async delete({ atomClass, key, user }) {
-      const res = await this.ctx.model.cookPublic.delete({
-        id: key.itemId,
-      });
-      if (res.affectedRows !== 1) this.ctx.throw.module('a-base', 1003);
-    }
-
+  let routes = [
+    // version
+    { method: 'post', path: 'version/update', controller: version, middlewares: 'inner' },
+    { method: 'post', path: 'version/init', controller: version, middlewares: 'inner' },
+    { method: 'post', path: 'version/test', controller: version, middlewares: 'test' },
+  ];
+  if (app.meta.isTest || app.meta.isLocal) {
+    routes = routes.concat([
+      // cook
+      { method: 'post', path: 'cook/create', controller: cook, middlewares: 'inner' },
+      { method: 'post', path: 'cook/read', controller: cook, middlewares: 'inner' },
+      { method: 'post', path: 'cook/select', controller: cook, middlewares: 'inner' },
+      { method: 'post', path: 'cook/write', controller: cook, middlewares: 'inner' },
+      { method: 'post', path: 'cook/delete', controller: cook, middlewares: 'inner' },
+      { method: 'post', path: 'cook/action', controller: cook, middlewares: 'inner' },
+      { method: 'post', path: 'cook/enable', controller: cook, middlewares: 'inner' },
+      { method: 'post', path: 'cook/types', controller: cook },
+      // test echo
+      { method: 'get', path: 'test/echo/:id', controller: test, action: 'echo', middlewares: 'test,transaction' },
+      { method: 'get', path: 'test/echo1', controller: test, middlewares: 'test' },
+      { method: 'get', path: 'test/echo2', controller: test, middlewares: 'test' },
+      // test star label
+      { method: 'get', path: 'test/starlabel', controller: test, middlewares: 'test' },
+      // test atom
+      { method: 'get', path: 'test/atom', controller: test, middlewares: 'test' },
+      // test right atom
+      { method: 'post', path: 'test/checkRightCreate', controller: test, middlewares: 'test',
+        meta: { right: { type: 'atom', action: 1 } },
+      },
+      { method: 'post', path: 'test/checkRightRead', controller: test, middlewares: 'test',
+        meta: { right: { type: 'atom', action: 2 } },
+      },
+      { method: 'post', path: 'test/checkRightWrite', controller: test, middlewares: 'test',
+        meta: { right: { type: 'atom', action: 3 } },
+      },
+      { method: 'post', path: 'test/checkRightAction', controller: test, middlewares: 'test',
+        meta: { right: { type: 'atom', action: 101 } },
+      },
+      // test right function
+      { method: 'post', path: 'test/checkRightFunctionUser', controller: test, middlewares: 'test',
+        meta: { right: { type: 'function', module: 'a-baseadmin', name: 'user' } },
+      },
+      // test function
+      { method: 'get', path: 'test/function', controller: test, action: 'func', middlewares: 'test' },
+      { method: 'get', path: 'test/functionPublic', controller: test, action: 'funcPublic', middlewares: 'test' },
+      // test atom public
+      { method: 'get', path: 'test/atomPublic', controller: test, middlewares: 'test' },
+      { method: 'post', path: 'cookPublic/create', controller: cookPublic, middlewares: 'inner' },
+      { method: 'post', path: 'cookPublic/write', controller: cookPublic, middlewares: 'inner' },
+      { method: 'post', path: 'cookPublic/delete', controller: cookPublic, middlewares: 'inner' },
+    ]);
   }
-
-  return CookPublic;
+  return routes;
 };
 
 
@@ -365,80 +251,25 @@ module.exports = app => {
 /***/ (function(module, exports) {
 
 module.exports = app => {
+  class VersionController extends app.Controller {
 
-  class Cook extends app.Service {
-
-    async create({ atomClass, key, atom, user }) {
-      // add cook
-      const res = await this.ctx.model.cook.insert({
-        atomId: key.atomId,
-      });
-      return { atomId: key.atomId, itemId: res.insertId };
+    async update() {
+      await this.service.version.update(this.ctx.request.body);
+      this.ctx.success();
     }
 
-    async read({ atomClass, key, item, user }) {
-      // read
+    async init() {
+      await this.service.version.init(this.ctx.request.body);
+      this.ctx.success();
     }
 
-    async select({ atomClass, options, items, user }) {
-      // select
-    }
-
-    async write({ atomClass, key, item, validation, user }) {
-      // update cook
-      const res = await this.ctx.model.cook.update({
-        id: key.itemId,
-        cookCount: item.cookCount,
-        cookTypeId: item.cookTypeId,
-      });
-      if (res.affectedRows !== 1) this.ctx.throw.module('a-base', 1003);
-    }
-
-    async delete({ atomClass, key, user }) {
-      // delete cook
-      const res = await this.ctx.model.cook.delete({
-        id: key.itemId,
-      });
-      if (res.affectedRows !== 1) this.ctx.throw.module('a-base', 1003);
-    }
-
-    async action({ action, atomClass, key, user }) {
-      if (action === 101) {
-        // change flag
-        await this.ctx.meta.atom.flag({
-          key,
-          atom: { atomFlag: 2 },
-          user,
-        });
-        return 'reviewed';
-      }
-    }
-
-    async enable({ atomClass, key, atom, user }) {
-      // enable
-      const atomFlag = atom.atomEnabled ? 1 : 0;
-      // change flag
-      await this.ctx.meta.atom.flag({
-        key,
-        atom: { atomFlag },
-        user,
-      });
-    }
-
-    async types({ empty }) {
-      const items = await this.ctx.model.cookType.select();
-      for (const item of items) {
-        item.name = this.ctx.text(item.name);
-      }
-      if (empty) {
-        items.unshift({ id: 0, name: '' });
-      }
-      return items;
+    async test() {
+      await this.service.version.test(this.ctx.request.body);
+      this.ctx.success();
     }
 
   }
-
-  return Cook;
+  return VersionController;
 };
 
 
@@ -446,306 +277,58 @@ module.exports = app => {
 /* 9 */
 /***/ (function(module, exports) {
 
-// roleName, leader, catalog, roleNameParent
-const roles = [
-  [ 'friend', 0, 0, 'external' ],
-  [ 'consultant', 0, 1, 'external' ],
-  [ 'study', 0, 0, 'consultant' ],
-  [ 'work', 0, 0, 'consultant' ],
-  [ 'life', 0, 0, 'consultant' ],
-  [ 'family', 0, 1, 'internal' ],
-  [ 'father', 0, 0, 'family' ],
-  [ 'mother', 1, 0, 'family' ],
-  [ 'son', 0, 0, 'family' ],
-  [ 'daughter', 0, 0, 'family' ],
-];
-
-// friend->family
-const roleIncs = [
-  [ 'friend', 'family' ],
-];
-
-// family and friend
-//   userName, roleName
-const users = [
-  [ 'Tom', 'father' ], [ 'Jane', 'mother' ], [ 'Tomson', 'son' ], [ 'Jannie', 'daughter' ],
-  [ 'Jimmy', 'friend' ], [ 'Rose', 'friend' ],
-  [ 'Smith', 'life' ],
-];
-
-// roleRights
-const roleRights = [
-  [ 'superuser', 'cook', 'create' ],
-  [ 'superuser', 'cook', 'read', 'family' ],
-  [ 'superuser', 'cook', 'review', 'family' ],
-  [ 'superuser', 'cook', 'review', 'authenticated' ],
-  [ 'family', 'cook', 'create' ],
-  [ 'family', 'cook', 'read', 'family' ],
-  [ 'mother', 'cook', 'review', 'family' ],
-  [ 'authenticated', 'cook', 'write', 0 ],
-  [ 'authenticated', 'cook', 'delete', 0 ],
-  [ 'consultant', 'cook', 'read', 'family' ],
-];
-
-module.exports = {
-  roles,
-  roleIncs,
-  users,
-  roleRights,
-};
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-const testData = __webpack_require__(9);
-
-module.exports = function(ctx) {
-
-  class VersionTest {
-
-    async run() {
-      const roleIds = await this._testRoles();
-      await this._testRoleIncs(roleIds);
-      await ctx.meta.role.build();
-      const userIds = await this._testUsers(roleIds);
-
-      await this._testRoleRights(roleIds);
-
-      await this._testAuths(userIds);
-
-      this._testCache(roleIds, userIds);
-    }
-
-    _testCache(roleIds, userIds) {
-      ctx.cache.mem.set('roleIds', roleIds);
-      ctx.cache.mem.set('userIds', userIds);
-    }
-
-    // roles
-    async _testRoles() {
-      const roleIds = {};
-      // system roles
-      for (const roleName of ctx.constant.module('a-base').systemRoles) {
-        const role = await ctx.meta.role.getSystemRole({ roleName });
-        roleIds[roleName] = role.id;
-      }
-      // roles
-      for (const [ roleName, leader, catalog, roleNameParent ] of testData.roles) {
-        roleIds[roleName] = await ctx.meta.role.add({
-          roleName,
-          leader,
-          catalog,
-          roleIdParent: roleIds[roleNameParent],
-        });
-      }
-
-      return roleIds;
-    }
-
-    // role incs
-    async _testRoleIncs(roleIds) {
-      for (const [ roleId, roleIdInc ] of testData.roleIncs) {
-        await ctx.meta.role.addRoleInc({
-          roleId: roleIds[roleId],
-          roleIdInc: roleIds[roleIdInc],
-        });
-      }
-    }
-
-    // users
-    async _testUsers(roleIds) {
-      const userIds = {};
-      for (const [ userName, roleName ] of testData.users) {
-        userIds[userName] = await ctx.meta.user.add({
-          userName,
-          realName: userName,
-        });
-        await ctx.meta.role.addUserRole({
-          userId: userIds[userName],
-          roleId: roleIds[roleName],
-        });
-      }
-      // root
-      const userRoot = await ctx.meta.user.get({ userName: 'root' });
-      userIds.root = userRoot.id;
-      return userIds;
-    }
-
-    // role rights
-    async _testRoleRights(roleIds) {
-      const module = ctx.app.meta.modules[ctx.module.info.relativeName];
-      for (const [ roleName, atomClassName, actionName, scopeNames ] of testData.roleRights) {
-        const atomClass = await ctx.meta.atomClass.get({ atomClassName });
-        await ctx.meta.role.addRoleRight({
-          roleId: roleIds[roleName],
-          atomClassId: atomClass.id,
-          action: ctx.constant.module('a-base').atom.action[actionName] || module.main.meta.base.atoms[atomClassName]
-            .actions[actionName].code,
-          scope: scopeNames ? scopeNames.split(',').map(scopeName => roleIds[scopeName]) : 0,
-        });
-      }
-    }
-
-    // auths
-    async _testAuths(userIds) {
-      for (const userName in userIds) {
-        await ctx.performAction({
-          method: 'post',
-          url: '/a/authsimple/auth/add',
-          body: {
-            userId: userIds[userName],
-            password: '',
-          },
-        });
-      }
-    }
-
-  }
-
-  return VersionTest;
-};
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const VersionTestFn = __webpack_require__(10);
-
 module.exports = app => {
 
-  class Version extends app.Service {
-
-    async update(options) {
-      if (options.version === 1) {
-        let sql = `
-          CREATE TABLE testCook (
-            id int(11) NOT NULL AUTO_INCREMENT,
-            createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            deleted int(11) DEFAULT '0',
-            iid int(11) DEFAULT '0',
-            atomId int(11) DEFAULT '0',
-            cookCount int(11) DEFAULT '0',
-            cookTypeId int(11) DEFAULT '0',
-            PRIMARY KEY (id)
-          )
-        `;
-        await this.ctx.model.query(sql);
-
-        sql = `
-          CREATE TABLE testCookType (
-            id int(11) NOT NULL AUTO_INCREMENT,
-            createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            deleted int(11) DEFAULT '0',
-            iid int(11) DEFAULT '0',
-            name varchar(255) DEFAULT NULL,
-            PRIMARY KEY (id)
-          )
-        `;
-        await this.ctx.model.query(sql);
-
-        sql = `
-          CREATE VIEW testCookView as
-            select a.*,b.name as cookTypeName from testCook a
-              left join testCookType b on a.cookTypeId=b.id
-        `;
-        await this.ctx.model.query(sql);
-
-        sql = `
-          CREATE TABLE testCookPublic (
-            id int(11) NOT NULL AUTO_INCREMENT,
-            createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            deleted int(11) DEFAULT '0',
-            iid int(11) DEFAULT '0',
-            atomId int(11) DEFAULT '0',
-            PRIMARY KEY (id)
-          )
-        `;
-        await this.ctx.model.query(sql);
-      }
-    }
-
-    async init(options) {
-      if (options.version === 1) {
-        if (this.app.meta.isTest || this.app.meta.isLocal) {
-          // types
-          for (const name of [ 'Breakfast', 'Lunch', 'Dinner' ]) {
-            await this.ctx.model.cookType.insert({ name });
-          }
-        }
-      }
-    }
-
-    async test() {
-      const versionTest = new (VersionTestFn(this.ctx))();
-      await versionTest.run();
-    }
-
-  }
-
-  return Version;
-};
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const version = __webpack_require__(11);
-const cook = __webpack_require__(8);
-const cookPublic = __webpack_require__(7);
-
-module.exports = app => {
-  const services = {
-    version,
-  };
-  if (app.meta.isTest || app.meta.isLocal) {
-    Object.assign(services, {
-      cook,
-      cookPublic,
-    });
-  }
-  return services;
-};
-
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports) {
-
-module.exports = app => {
-
-  class CookPublicController extends app.Controller {
+  class CookController extends app.Controller {
 
     async create() {
-      const res = await this.ctx.service.cookPublic.create(this.ctx.request.body);
+      const res = await this.ctx.service.cook.create(this.ctx.request.body);
+      this.ctx.success(res);
+    }
+
+    async read() {
+      const res = await this.ctx.service.cook.read(this.ctx.request.body);
+      this.ctx.success(res);
+    }
+
+    async select() {
+      const res = await this.ctx.service.cook.select(this.ctx.request.body);
       this.ctx.success(res);
     }
 
     async write() {
-      await this.ctx.service.cookPublic.write(this.ctx.request.body);
+      await this.ctx.service.cook.write(this.ctx.request.body);
       this.ctx.success();
     }
 
     async delete() {
-      await this.ctx.service.cookPublic.delete(this.ctx.request.body);
+      await this.ctx.service.cook.delete(this.ctx.request.body);
       this.ctx.success();
     }
 
+    async action() {
+      const res = await this.ctx.service.cook.action(this.ctx.request.body);
+      this.ctx.success(res);
+    }
+
+    async enable() {
+      const res = await this.ctx.service.cook.enable(this.ctx.request.body);
+      this.ctx.success(res);
+    }
+
+    async types() {
+      const res = await this.ctx.service.cook.types(this.ctx.request.body);
+      this.ctx.success(res);
+    }
+
   }
-  return CookPublicController;
+  return CookController;
 };
 
 
 
 /***/ }),
-/* 14 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const require3 = __webpack_require__(0);
@@ -1256,57 +839,305 @@ module.exports = app => {
 
 
 /***/ }),
-/* 15 */
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = app => {
 
-  class CookController extends app.Controller {
+  class CookPublicController extends app.Controller {
 
     async create() {
-      const res = await this.ctx.service.cook.create(this.ctx.request.body);
-      this.ctx.success(res);
-    }
-
-    async read() {
-      const res = await this.ctx.service.cook.read(this.ctx.request.body);
-      this.ctx.success(res);
-    }
-
-    async select() {
-      const res = await this.ctx.service.cook.select(this.ctx.request.body);
+      const res = await this.ctx.service.cookPublic.create(this.ctx.request.body);
       this.ctx.success(res);
     }
 
     async write() {
-      await this.ctx.service.cook.write(this.ctx.request.body);
+      await this.ctx.service.cookPublic.write(this.ctx.request.body);
       this.ctx.success();
     }
 
     async delete() {
-      await this.ctx.service.cook.delete(this.ctx.request.body);
+      await this.ctx.service.cookPublic.delete(this.ctx.request.body);
       this.ctx.success();
     }
 
-    async action() {
-      const res = await this.ctx.service.cook.action(this.ctx.request.body);
-      this.ctx.success(res);
+  }
+  return CookPublicController;
+};
+
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const version = __webpack_require__(13);
+const cook = __webpack_require__(16);
+const cookPublic = __webpack_require__(17);
+
+module.exports = app => {
+  const services = {
+    version,
+  };
+  if (app.meta.isTest || app.meta.isLocal) {
+    Object.assign(services, {
+      cook,
+      cookPublic,
+    });
+  }
+  return services;
+};
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const VersionTestFn = __webpack_require__(14);
+
+module.exports = app => {
+
+  class Version extends app.Service {
+
+    async update(options) {
+      if (options.version === 1) {
+        let sql = `
+          CREATE TABLE testCook (
+            id int(11) NOT NULL AUTO_INCREMENT,
+            createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            deleted int(11) DEFAULT '0',
+            iid int(11) DEFAULT '0',
+            atomId int(11) DEFAULT '0',
+            cookCount int(11) DEFAULT '0',
+            cookTypeId int(11) DEFAULT '0',
+            PRIMARY KEY (id)
+          )
+        `;
+        await this.ctx.model.query(sql);
+
+        sql = `
+          CREATE TABLE testCookType (
+            id int(11) NOT NULL AUTO_INCREMENT,
+            createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            deleted int(11) DEFAULT '0',
+            iid int(11) DEFAULT '0',
+            name varchar(255) DEFAULT NULL,
+            PRIMARY KEY (id)
+          )
+        `;
+        await this.ctx.model.query(sql);
+
+        sql = `
+          CREATE VIEW testCookView as
+            select a.*,b.name as cookTypeName from testCook a
+              left join testCookType b on a.cookTypeId=b.id
+        `;
+        await this.ctx.model.query(sql);
+
+        sql = `
+          CREATE TABLE testCookPublic (
+            id int(11) NOT NULL AUTO_INCREMENT,
+            createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            deleted int(11) DEFAULT '0',
+            iid int(11) DEFAULT '0',
+            atomId int(11) DEFAULT '0',
+            PRIMARY KEY (id)
+          )
+        `;
+        await this.ctx.model.query(sql);
+      }
     }
 
-    async enable() {
-      const res = await this.ctx.service.cook.enable(this.ctx.request.body);
-      this.ctx.success(res);
+    async init(options) {
+      if (options.version === 1) {
+        if (this.app.meta.isTest || this.app.meta.isLocal) {
+          // types
+          for (const name of [ 'Breakfast', 'Lunch', 'Dinner' ]) {
+            await this.ctx.model.cookType.insert({ name });
+          }
+        }
+      }
     }
 
-    async types() {
-      const res = await this.ctx.service.cook.types(this.ctx.request.body);
-      this.ctx.success(res);
+    async test() {
+      const versionTest = new (VersionTestFn(this.ctx))();
+      await versionTest.run();
     }
 
   }
-  return CookController;
+
+  return Version;
 };
 
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+const testData = __webpack_require__(15);
+
+module.exports = function(ctx) {
+
+  class VersionTest {
+
+    async run() {
+      const roleIds = await this._testRoles();
+      await this._testRoleIncs(roleIds);
+      await ctx.meta.role.build();
+      const userIds = await this._testUsers(roleIds);
+
+      await this._testRoleRights(roleIds);
+
+      await this._testAuths(userIds);
+
+      this._testCache(roleIds, userIds);
+    }
+
+    _testCache(roleIds, userIds) {
+      ctx.cache.mem.set('roleIds', roleIds);
+      ctx.cache.mem.set('userIds', userIds);
+    }
+
+    // roles
+    async _testRoles() {
+      const roleIds = {};
+      // system roles
+      for (const roleName of ctx.constant.module('a-base').systemRoles) {
+        const role = await ctx.meta.role.getSystemRole({ roleName });
+        roleIds[roleName] = role.id;
+      }
+      // roles
+      for (const [ roleName, leader, catalog, roleNameParent ] of testData.roles) {
+        roleIds[roleName] = await ctx.meta.role.add({
+          roleName,
+          leader,
+          catalog,
+          roleIdParent: roleIds[roleNameParent],
+        });
+      }
+
+      return roleIds;
+    }
+
+    // role incs
+    async _testRoleIncs(roleIds) {
+      for (const [ roleId, roleIdInc ] of testData.roleIncs) {
+        await ctx.meta.role.addRoleInc({
+          roleId: roleIds[roleId],
+          roleIdInc: roleIds[roleIdInc],
+        });
+      }
+    }
+
+    // users
+    async _testUsers(roleIds) {
+      const userIds = {};
+      for (const [ userName, roleName ] of testData.users) {
+        userIds[userName] = await ctx.meta.user.add({
+          userName,
+          realName: userName,
+        });
+        await ctx.meta.role.addUserRole({
+          userId: userIds[userName],
+          roleId: roleIds[roleName],
+        });
+      }
+      // root
+      const userRoot = await ctx.meta.user.get({ userName: 'root' });
+      userIds.root = userRoot.id;
+      return userIds;
+    }
+
+    // role rights
+    async _testRoleRights(roleIds) {
+      const module = ctx.app.meta.modules[ctx.module.info.relativeName];
+      for (const [ roleName, atomClassName, actionName, scopeNames ] of testData.roleRights) {
+        const atomClass = await ctx.meta.atomClass.get({ atomClassName });
+        await ctx.meta.role.addRoleRight({
+          roleId: roleIds[roleName],
+          atomClassId: atomClass.id,
+          action: ctx.constant.module('a-base').atom.action[actionName] || module.main.meta.base.atoms[atomClassName]
+            .actions[actionName].code,
+          scope: scopeNames ? scopeNames.split(',').map(scopeName => roleIds[scopeName]) : 0,
+        });
+      }
+    }
+
+    // auths
+    async _testAuths(userIds) {
+      for (const userName in userIds) {
+        await ctx.performAction({
+          method: 'post',
+          url: '/a/authsimple/auth/add',
+          body: {
+            userId: userIds[userName],
+            password: '',
+          },
+        });
+      }
+    }
+
+  }
+
+  return VersionTest;
+};
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports) {
+
+// roleName, leader, catalog, roleNameParent
+const roles = [
+  [ 'friend', 0, 0, 'external' ],
+  [ 'consultant', 0, 1, 'external' ],
+  [ 'study', 0, 0, 'consultant' ],
+  [ 'work', 0, 0, 'consultant' ],
+  [ 'life', 0, 0, 'consultant' ],
+  [ 'family', 0, 1, 'internal' ],
+  [ 'father', 0, 0, 'family' ],
+  [ 'mother', 1, 0, 'family' ],
+  [ 'son', 0, 0, 'family' ],
+  [ 'daughter', 0, 0, 'family' ],
+];
+
+// friend->family
+const roleIncs = [
+  [ 'friend', 'family' ],
+];
+
+// family and friend
+//   userName, roleName
+const users = [
+  [ 'Tom', 'father' ], [ 'Jane', 'mother' ], [ 'Tomson', 'son' ], [ 'Jannie', 'daughter' ],
+  [ 'Jimmy', 'friend' ], [ 'Rose', 'friend' ],
+  [ 'Smith', 'life' ],
+];
+
+// roleRights
+const roleRights = [
+  [ 'superuser', 'cook', 'create' ],
+  [ 'superuser', 'cook', 'read', 'family' ],
+  [ 'superuser', 'cook', 'review', 'family' ],
+  [ 'superuser', 'cook', 'review', 'authenticated' ],
+  [ 'family', 'cook', 'create' ],
+  [ 'family', 'cook', 'read', 'family' ],
+  [ 'mother', 'cook', 'review', 'family' ],
+  [ 'authenticated', 'cook', 'write', 0 ],
+  [ 'authenticated', 'cook', 'delete', 0 ],
+  [ 'consultant', 'cook', 'read', 'family' ],
+];
+
+module.exports = {
+  roles,
+  roleIncs,
+  users,
+  roleRights,
+};
 
 
 /***/ }),
@@ -1314,99 +1145,133 @@ module.exports = app => {
 /***/ (function(module, exports) {
 
 module.exports = app => {
-  class VersionController extends app.Controller {
 
-    async update() {
-      await this.service.version.update(this.ctx.request.body);
-      this.ctx.success();
+  class Cook extends app.Service {
+
+    async create({ atomClass, key, atom, user }) {
+      // add cook
+      const res = await this.ctx.model.cook.insert({
+        atomId: key.atomId,
+      });
+      return { atomId: key.atomId, itemId: res.insertId };
     }
 
-    async init() {
-      await this.service.version.init(this.ctx.request.body);
-      this.ctx.success();
+    async read({ atomClass, key, item, user }) {
+      // read
     }
 
-    async test() {
-      await this.service.version.test(this.ctx.request.body);
-      this.ctx.success();
+    async select({ atomClass, options, items, user }) {
+      // select
+    }
+
+    async write({ atomClass, key, item, validation, user }) {
+      // update cook
+      const res = await this.ctx.model.cook.update({
+        id: key.itemId,
+        cookCount: item.cookCount,
+        cookTypeId: item.cookTypeId,
+      });
+      if (res.affectedRows !== 1) this.ctx.throw.module('a-base', 1003);
+    }
+
+    async delete({ atomClass, key, user }) {
+      // delete cook
+      const res = await this.ctx.model.cook.delete({
+        id: key.itemId,
+      });
+      if (res.affectedRows !== 1) this.ctx.throw.module('a-base', 1003);
+    }
+
+    async action({ action, atomClass, key, user }) {
+      if (action === 101) {
+        // change flag
+        await this.ctx.meta.atom.flag({
+          key,
+          atom: { atomFlag: 2 },
+          user,
+        });
+        return 'reviewed';
+      }
+    }
+
+    async enable({ atomClass, key, atom, user }) {
+      // enable
+      const atomFlag = atom.atomEnabled ? 1 : 0;
+      // change flag
+      await this.ctx.meta.atom.flag({
+        key,
+        atom: { atomFlag },
+        user,
+      });
+    }
+
+    async types({ empty }) {
+      const items = await this.ctx.model.cookType.select();
+      for (const item of items) {
+        item.name = this.ctx.text(item.name);
+      }
+      if (empty) {
+        items.unshift({ id: 0, name: '' });
+      }
+      return items;
     }
 
   }
-  return VersionController;
+
+  return Cook;
 };
 
 
 /***/ }),
 /* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const version = __webpack_require__(16);
-const cook = __webpack_require__(15);
-const test = __webpack_require__(14);
-const cookPublic = __webpack_require__(13);
+/***/ (function(module, exports) {
 
 module.exports = app => {
-  let routes = [
-    // version
-    { method: 'post', path: 'version/update', controller: version, middlewares: 'inner' },
-    { method: 'post', path: 'version/init', controller: version, middlewares: 'inner' },
-    { method: 'post', path: 'version/test', controller: version, middlewares: 'test' },
-  ];
-  if (app.meta.isTest || app.meta.isLocal) {
-    routes = routes.concat([
-      // cook
-      { method: 'post', path: 'cook/create', controller: cook, middlewares: 'inner' },
-      { method: 'post', path: 'cook/read', controller: cook, middlewares: 'inner' },
-      { method: 'post', path: 'cook/select', controller: cook, middlewares: 'inner' },
-      { method: 'post', path: 'cook/write', controller: cook, middlewares: 'inner' },
-      { method: 'post', path: 'cook/delete', controller: cook, middlewares: 'inner' },
-      { method: 'post', path: 'cook/action', controller: cook, middlewares: 'inner' },
-      { method: 'post', path: 'cook/enable', controller: cook, middlewares: 'inner' },
-      { method: 'post', path: 'cook/types', controller: cook },
-      // test echo
-      { method: 'get', path: 'test/echo/:id', controller: test, action: 'echo', middlewares: 'test,transaction' },
-      { method: 'get', path: 'test/echo1', controller: test, middlewares: 'test' },
-      { method: 'get', path: 'test/echo2', controller: test, middlewares: 'test' },
-      // test star label
-      { method: 'get', path: 'test/starlabel', controller: test, middlewares: 'test' },
-      // test atom
-      { method: 'get', path: 'test/atom', controller: test, middlewares: 'test' },
-      // test right atom
-      { method: 'post', path: 'test/checkRightCreate', controller: test, middlewares: 'test',
-        meta: { right: { type: 'atom', action: 1 } },
-      },
-      { method: 'post', path: 'test/checkRightRead', controller: test, middlewares: 'test',
-        meta: { right: { type: 'atom', action: 2 } },
-      },
-      { method: 'post', path: 'test/checkRightWrite', controller: test, middlewares: 'test',
-        meta: { right: { type: 'atom', action: 3 } },
-      },
-      { method: 'post', path: 'test/checkRightAction', controller: test, middlewares: 'test',
-        meta: { right: { type: 'atom', action: 101 } },
-      },
-      // test right function
-      { method: 'post', path: 'test/checkRightFunctionUser', controller: test, middlewares: 'test',
-        meta: { right: { type: 'function', module: 'a-baseadmin', name: 'user' } },
-      },
-      // test function
-      { method: 'get', path: 'test/function', controller: test, action: 'func', middlewares: 'test' },
-      { method: 'get', path: 'test/functionPublic', controller: test, action: 'funcPublic', middlewares: 'test' },
-      // test atom public
-      { method: 'get', path: 'test/atomPublic', controller: test, middlewares: 'test' },
-      { method: 'post', path: 'cookPublic/create', controller: cookPublic, middlewares: 'inner' },
-      { method: 'post', path: 'cookPublic/write', controller: cookPublic, middlewares: 'inner' },
-      { method: 'post', path: 'cookPublic/delete', controller: cookPublic, middlewares: 'inner' },
-    ]);
+
+  class CookPublic extends app.Service {
+
+    async create({ atomClass, key, atom, user }) {
+      const res = await this.ctx.model.cookPublic.insert({
+        atomId: key.atomId,
+      });
+      return { atomId: key.atomId, itemId: res.insertId };
+    }
+
+    async write({ atomClass, key, item, validation, user }) {
+    }
+
+    async delete({ atomClass, key, user }) {
+      const res = await this.ctx.model.cookPublic.delete({
+        id: key.itemId,
+      });
+      if (res.affectedRows !== 1) this.ctx.throw.module('a-base', 1003);
+    }
+
   }
-  return routes;
+
+  return CookPublic;
 };
 
 
 /***/ }),
 /* 18 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = {
+const cook = __webpack_require__(19);
+const cookType = __webpack_require__(20);
+const cookPublic = __webpack_require__(21);
+
+module.exports = app => {
+  const models = {
+  };
+  if (app.meta.isTest || app.meta.isLocal) {
+    Object.assign(models, {
+      cook,
+      cookType,
+      cookPublic,
+    });
+  }
+  return models;
 };
 
 
@@ -1414,8 +1279,17 @@ module.exports = {
 /* 19 */
 /***/ (function(module, exports) {
 
-// error code should start from 1001
-module.exports = {
+module.exports = app => {
+
+  class Cook extends app.meta.Model {
+
+    constructor(ctx) {
+      super(ctx, { table: 'testCook', options: { disableDeleted: false } });
+    }
+
+  }
+
+  return Cook;
 };
 
 
@@ -1423,71 +1297,197 @@ module.exports = {
 /* 20 */
 /***/ (function(module, exports) {
 
-module.exports = {
-  'Create Cook': '新建烹饪',
-  'Cook List': '烹饪列表',
-  Cook: '烹饪',
-  Review: '评审',
-  Reviewing: '评审中',
-  Reviewed: '已评审',
-  Breakfast: '早餐',
-  Lunch: '午餐',
-  Dinner: '晚餐',
+module.exports = app => {
+
+  class CookType extends app.meta.Model {
+
+    constructor(ctx) {
+      super(ctx, { table: 'testCookType', options: { disableDeleted: true } });
+    }
+
+  }
+
+  return CookType;
 };
 
 
 /***/ }),
 /* 21 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-module.exports = {
-  'zh-cn': __webpack_require__(20),
+module.exports = app => {
+
+  class CookPublic extends app.meta.Model {
+
+    constructor(ctx) {
+      super(ctx, { table: 'testCookPublic', options: { disableDeleted: false } });
+    }
+
+  }
+
+  return CookPublic;
 };
 
 
 /***/ }),
 /* 22 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-// eslint-disable-next-line
-module.exports = appInfo => {
-  const config = {};
-  return config;
+const require3 = __webpack_require__(0);
+const extend = require3('extend2');
+
+module.exports = app => {
+  const meta = {
+  };
+  if (app.meta.isTest || app.meta.isLocal) {
+    // schemas
+    const schemas = __webpack_require__(23)(app);
+    // meta
+    extend(true, meta, {
+      base: {
+        atoms: {
+          cook: {
+            info: {
+              title: 'Cook',
+              tableName: 'testCookView',
+            },
+            actions: {
+              review: {
+                code: 101,
+                title: 'Review',
+                flag: '1',
+              },
+            },
+            flags: {
+              1: {
+                title: 'Reviewing',
+              },
+              2: {
+                title: 'Reviewed',
+              },
+            },
+            validator: 'cook',
+            search: {
+              validator: 'cookSearch',
+            },
+          },
+        },
+        functions: {
+          createCook: {
+            title: 'Create Cook',
+            scene: 'create',
+            autoRight: 1,
+            atomClassName: 'cook',
+            action: 'create',
+            sorting: 1,
+            menu: 1,
+          },
+          listCook: {
+            title: 'Cook List',
+            scene: 'list',
+            autoRight: 1,
+            atomClassName: 'cook',
+            action: 'read',
+            sorting: 1,
+            menu: 1,
+          },
+        },
+      },
+      validation: {
+        validators: {
+          cook: {
+            schemas: 'cook',
+          },
+          cookSearch: {
+            schemas: 'cookSearch',
+          },
+        },
+        keywords: {},
+        schemas: {
+          cook: schemas.cook,
+          cookSearch: schemas.cookSearch,
+        },
+      },
+    });
+  }
+  if (app.meta.isTest) {
+    // meta
+    extend(true, meta, {
+      base: {
+        atoms: {
+          cookPublic: {
+            info: {
+              tableName: 'testCookPublic',
+              public: 1,
+              flow: 1,
+            },
+          },
+        },
+        functions: {
+          testPublic: {
+            scene: 'tools',
+            menu: 1,
+            public: 1,
+          },
+        },
+      },
+    });
+  }
+  return meta;
 };
 
 
 /***/ }),
 /* 23 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-const config = __webpack_require__(22);
-const locales = __webpack_require__(21);
-const errors = __webpack_require__(19);
-const middlewares = __webpack_require__(18);
-
-// eslint-disable-next-line
 module.exports = app => {
-
-  // routes
-  const routes = __webpack_require__(17)(app);
-  // services
-  const services = __webpack_require__(12)(app);
-  // models
-  const models = __webpack_require__(6)(app);
-  // meta
-  const meta = __webpack_require__(2)(app);
-
-  return {
-    routes,
-    services,
-    models,
-    config,
-    locales,
-    errors,
-    middlewares,
-    meta,
+  const schemas = {};
+  // cook
+  schemas.cook = {
+    type: 'object',
+    properties: {
+      atomName: {
+        type: 'string',
+        ebType: 'text',
+        ebTitle: 'Cook Name',
+        notEmpty: true,
+      },
+      cookCount: {
+        type: 'number',
+        ebType: 'text',
+        ebTitle: 'Cook Count',
+        notEmpty: true,
+      },
+      cookTypeId: {
+        type: 'number',
+        ebType: 'select',
+        ebTitle: 'Cook Type',
+        ebOptionsUrl: '/test/cook/cook/types',
+        ebOptionsUrlParams: { empty: true },
+        ebOptionTitleKey: 'name',
+        ebOptionValueKey: 'id',
+        notEmpty: true,
+      },
+    },
+  };
+  // cook search
+  schemas.cookSearch = {
+    type: 'object',
+    properties: {
+      cookTypeId: {
+        type: 'number',
+        ebType: 'select',
+        ebTitle: 'Cook Type',
+        ebOptionsUrl: '/test/cook/cook/types',
+        ebOptionsUrlParams: { empty: true },
+        ebOptionTitleKey: 'name',
+        ebOptionValueKey: 'id',
+      },
+    },
   };
 
+  return schemas;
 };
 
 
