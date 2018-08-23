@@ -489,7 +489,7 @@ module.exports = app => {
       for (const [ userName, atomCountExpected ] of userAtoms) {
         const list = await this.ctx.meta.atom.select({
           options: {
-            where: null,
+            where: { 'b.module': 'test-cook' },
             orders: null,
             page: null,
           },
