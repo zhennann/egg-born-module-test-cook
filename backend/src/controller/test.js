@@ -39,7 +39,7 @@ module.exports = app => {
         options: {
           where: { 'a.module': 'test-cook' },
           orders: [[ 'id', 'asc' ]],
-          page: { index: 0, size: 20 },
+          page: { index: 0, size: 0 },
           locale: '',
         },
         user: userTom,
@@ -52,7 +52,7 @@ module.exports = app => {
         options: {
           where: { 'a.module': 'test-cook' },
           orders: [[ 'id', 'asc' ]],
-          page: { index: 0, size: 20 },
+          page: { index: 0, size: 0 },
           locale: 'zh-cn',
         },
         user: userTom,
@@ -72,6 +72,7 @@ module.exports = app => {
         options: {
           where: { 'a.module': 'test-cook' },
           star: 1,
+          page: { index: 0, size: 0 },
         },
       });
       assert(list.length === 0);
@@ -83,6 +84,7 @@ module.exports = app => {
         options: {
           where: { 'a.module': 'test-cook' },
           star: 1,
+          page: { index: 0, size: 0 },
         },
       });
       assert(list.length === 1);
@@ -94,6 +96,7 @@ module.exports = app => {
         options: {
           where: { 'a.module': 'test-cook' },
           star: 1,
+          page: { index: 0, size: 0 },
         },
       });
       assert(list.length === 0);
@@ -123,7 +126,7 @@ module.exports = app => {
         options: {
           where: { 'a.module': 'test-cook', 'a.public': 1 },
           orders: [[ 'id', 'asc' ]],
-          page: { index: 0, size: 20 },
+          page: { index: 0, size: 0 },
           locale: '',
         },
         user: userTom,
@@ -286,7 +289,7 @@ module.exports = app => {
         options: {
           where: { atomName: { val: 'egg', op: 'likeRight' } },
           orders: [[ 'a.createdAt', 'desc' ]],
-          page: { index: 0, size: 20 },
+          page: { index: 0, size: 0 },
         },
         user: { id: userIds.Tom },
       });
