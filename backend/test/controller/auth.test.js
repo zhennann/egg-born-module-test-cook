@@ -7,12 +7,12 @@ describe('test/controller/auth.test.js', () => {
 
     // echo
     let result = await app.httpRequest().post(mockUrl('/a/base/auth/echo'));
-    const op1 = result.body.data.op;
+    const op1 = result.body.data.user.op;
     assert(op1.anonymous);
 
     // echo again
     result = await app.httpRequest().post(mockUrl('/a/base/auth/echo'));
-    const op2 = result.body.data.op;
+    const op2 = result.body.data.user.op;
     assert(op2.id === op1.id);
 
     // logout
@@ -21,7 +21,7 @@ describe('test/controller/auth.test.js', () => {
 
     // echo again
     result = await app.httpRequest().post(mockUrl('/a/base/auth/echo'));
-    const op3 = result.body.data.op;
+    const op3 = result.body.data.user.op;
     assert(op3.id > op2.id);
 
   });
