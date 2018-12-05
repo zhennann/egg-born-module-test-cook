@@ -2,7 +2,7 @@ module.exports = app => {
 
   class Cook extends app.Service {
 
-    async create({ atomClass, key, atom, user }) {
+    async create({ atomClass, key, item, user }) {
       // add cook
       const res = await this.ctx.model.cook.insert({
         atomId: key.atomId,
