@@ -1412,7 +1412,6 @@ module.exports = app => {
           cookSearch: schemas.cookSearch,
         },
       },
-      auth: authFn(app),
     });
   }
   if (app.meta.isTest) {
@@ -1436,6 +1435,7 @@ module.exports = app => {
           },
         },
       },
+      auth: authFn(app),
     });
   }
   return meta;
@@ -1450,7 +1450,7 @@ module.exports = app => {
   return {
     events: {
       async onUserVerify({ ctx, verifyUser, profileUser }) {
-        console.log('onUserVerify: ', profileUser.profileId);
+        console.log('onUserVerify profileId: ', profileUser.profileId);
       },
     },
   };

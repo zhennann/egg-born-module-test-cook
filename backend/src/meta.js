@@ -74,7 +74,6 @@ module.exports = app => {
           cookSearch: schemas.cookSearch,
         },
       },
-      auth: authFn(app),
     });
   }
   if (app.meta.isTest) {
@@ -98,6 +97,7 @@ module.exports = app => {
           },
         },
       },
+      auth: authFn(app),
     });
   }
   return meta;
