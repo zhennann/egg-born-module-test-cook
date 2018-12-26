@@ -1338,13 +1338,14 @@ module.exports = app => {
 
 const require3 = __webpack_require__(0);
 const extend = require3('extend2');
+const authFn = __webpack_require__(23);
 
 module.exports = app => {
   const meta = {
   };
   if (app.meta.isTest || app.meta.isLocal) {
     // schemas
-    const schemas = __webpack_require__(23)(app);
+    const schemas = __webpack_require__(24)(app);
     // meta
     extend(true, meta, {
       base: {
@@ -1411,6 +1412,7 @@ module.exports = app => {
           cookSearch: schemas.cookSearch,
         },
       },
+      auth: authFn(app),
     });
   }
   if (app.meta.isTest) {
@@ -1442,6 +1444,21 @@ module.exports = app => {
 
 /***/ }),
 /* 23 */
+/***/ (function(module, exports) {
+
+module.exports = app => {
+  return {
+    events: {
+      async onUserVerify({ ctx, verifyUser, profileUser }) {
+        console.log('onUserVerify: ', profileUser.profileId);
+      },
+    },
+  };
+};
+
+
+/***/ }),
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = app => {

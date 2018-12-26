@@ -1,5 +1,6 @@
 const require3 = require('require3');
 const extend = require3('extend2');
+const authFn = require('./config/passport/auth.js');
 
 module.exports = app => {
   const meta = {
@@ -73,6 +74,7 @@ module.exports = app => {
           cookSearch: schemas.cookSearch,
         },
       },
+      auth: authFn(app),
     });
   }
   if (app.meta.isTest) {
