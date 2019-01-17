@@ -98,7 +98,7 @@ module.exports = app => {
       },
       event: {
         implementations: {
-          'a-base:authVerify': 'test/eventAuthVerify',
+          'a-base:userVerify': 'test/eventUserVerify',
         },
       },
     });

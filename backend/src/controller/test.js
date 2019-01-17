@@ -488,7 +488,7 @@ module.exports = app => {
       this.ctx.success();
     }
 
-    async eventAuthVerify() {
+    async eventUserVerify() {
       const data = this.ctx.request.body.data;
       console.log('onUserVerify profileId: ', data.profileUser.profileId);
       this.ctx.success();

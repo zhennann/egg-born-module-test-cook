@@ -235,8 +235,8 @@ module.exports = app => {
       // test function
       { method: 'get', path: 'test/function', controller: test, action: 'func', middlewares: 'test' },
       { method: 'get', path: 'test/functionPublic', controller: test, action: 'funcPublic', middlewares: 'test' },
-      // test event: authVerify
-      { method: 'post', path: 'test/eventAuthVerify', controller: test, middlewares: 'test', meta: { auth: { enable: false } } },
+      // test event: userVerify
+      { method: 'post', path: 'test/eventUserVerify', controller: test, middlewares: 'test', meta: { auth: { enable: false } } },
       // test atom public
       { method: 'get', path: 'test/atomPublic', controller: test, middlewares: 'test' },
       { method: 'post', path: 'cookPublic/create', controller: cookPublic, middlewares: 'inner' },
@@ -823,7 +823,7 @@ module.exports = app => {
       this.ctx.success();
     }
 
-    async eventAuthVerify() {
+    async eventUserVerify() {
       const data = this.ctx.request.body.data;
       console.log('onUserVerify profileId: ', data.profileUser.profileId);
       this.ctx.success();
@@ -1444,7 +1444,7 @@ module.exports = app => {
       },
       event: {
         implementations: {
-          'a-base:authVerify': 'test/eventAuthVerify',
+          'a-base:userVerify': 'test/eventUserVerify',
         },
       },
     });
