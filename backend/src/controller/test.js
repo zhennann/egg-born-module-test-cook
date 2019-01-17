@@ -488,6 +488,12 @@ module.exports = app => {
       this.ctx.success();
     }
 
+    async eventAuthVerify() {
+      const data = this.ctx.request.body.data;
+      console.log('onUserVerify profileId: ', data.profileUser.profileId);
+      this.ctx.success();
+    }
+
     async _testCheckList(userIds, userAtoms) {
       for (const [ userName, atomCountExpected ] of userAtoms) {
         const list = await this.ctx.meta.atom.select({

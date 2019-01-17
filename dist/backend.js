@@ -235,6 +235,8 @@ module.exports = app => {
       // test function
       { method: 'get', path: 'test/function', controller: test, action: 'func', middlewares: 'test' },
       { method: 'get', path: 'test/functionPublic', controller: test, action: 'funcPublic', middlewares: 'test' },
+      // test event: authVerify
+      { method: 'post', path: 'test/eventAuthVerify', controller: test, middlewares: 'test', meta: { auth: { enable: false } } },
       // test atom public
       { method: 'get', path: 'test/atomPublic', controller: test, middlewares: 'test' },
       { method: 'post', path: 'cookPublic/create', controller: cookPublic, middlewares: 'inner' },
@@ -821,6 +823,12 @@ module.exports = app => {
       this.ctx.success();
     }
 
+    async eventAuthVerify() {
+      const data = this.ctx.request.body.data;
+      console.log('onUserVerify profileId: ', data.profileUser.profileId);
+      this.ctx.success();
+    }
+
     async _testCheckList(userIds, userAtoms) {
       for (const [ userName, atomCountExpected ] of userAtoms) {
         const list = await this.ctx.meta.atom.select({
@@ -1338,14 +1346,13 @@ module.exports = app => {
 
 const require3 = __webpack_require__(0);
 const extend = require3('extend2');
-const authFn = __webpack_require__(23);
 
 module.exports = app => {
   const meta = {
   };
   if (app.meta.isTest || app.meta.isLocal) {
     // schemas
-    const schemas = __webpack_require__(24)(app);
+    const schemas = __webpack_require__(23)(app);
     // meta
     extend(true, meta, {
       base: {
@@ -1435,7 +1442,11 @@ module.exports = app => {
           },
         },
       },
-      auth: authFn(app),
+      event: {
+        implementations: {
+          'a-base:authVerify': 'test/eventAuthVerify',
+        },
+      },
     });
   }
   return meta;
@@ -1444,21 +1455,6 @@ module.exports = app => {
 
 /***/ }),
 /* 23 */
-/***/ (function(module, exports) {
-
-module.exports = app => {
-  return {
-    events: {
-      async onUserVerify({ ctx, verifyUser, profileUser }) {
-        console.log('onUserVerify profileId: ', profileUser.profileId);
-      },
-    },
-  };
-};
-
-
-/***/ }),
-/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = app => {
