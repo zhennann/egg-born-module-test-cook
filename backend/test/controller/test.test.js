@@ -171,4 +171,11 @@ describe('test/controller/test.test.js', () => {
     assert(result.body.code === 0);
   });
 
+  it('action:httpLog', async () => {
+    const result = await app.httpRequest().post(mockUrl('test/httpLog?name=zhennann')).send({
+      sex: 1,
+    });
+    assert(result.body.code === 0);
+  });
+
 });

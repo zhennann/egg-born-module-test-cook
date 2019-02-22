@@ -242,6 +242,7 @@ module.exports = app => {
       { method: 'post', path: 'cookPublic/create', controller: cookPublic, middlewares: 'inner' },
       { method: 'post', path: 'cookPublic/write', controller: cookPublic, middlewares: 'inner' },
       { method: 'post', path: 'cookPublic/delete', controller: cookPublic, middlewares: 'inner' },
+      { method: 'post', path: 'test/httpLog', controller: test, middlewares: 'test,httpLog' },
     ]);
   }
   return routes;
@@ -841,6 +842,10 @@ module.exports = app => {
         });
         assert.equal(list.length, atomCountExpected);
       }
+    }
+
+    async httpLog() {
+      this.ctx.success('this is a httpLog');
     }
 
   }

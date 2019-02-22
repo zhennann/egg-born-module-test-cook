@@ -508,6 +508,10 @@ module.exports = app => {
       }
     }
 
+    async httpLog() {
+      this.ctx.success('this is a httpLog');
+    }
+
   }
 
   return TestController;
