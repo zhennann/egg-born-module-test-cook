@@ -27,10 +27,10 @@ const users = [
 
 // roleRights
 const roleRights = [
-  [ 'superuser', 'cook', 'create' ],
-  [ 'superuser', 'cook', 'read', 'family' ],
-  [ 'superuser', 'cook', 'review', 'family' ],
-  [ 'superuser', 'cook', 'review', 'authenticated' ],
+  [ 'system', 'cook', 'create' ],
+  [ 'system', 'cook', 'read', 'family' ],
+  [ 'system', 'cook', 'review', 'family' ],
+  [ 'system', 'cook', 'review', 'authenticated' ],
   [ 'family', 'cook', 'create' ],
   [ 'family', 'cook', 'read', 'family' ],
   [ 'mother', 'cook', 'review', 'family' ],
