@@ -3,4 +3,5 @@ function load(name) {
 }
 
 export default [
+  { path: 'test/select', component: load('test/select') },
 ];
