@@ -9,7 +9,7 @@ module.exports = app => {
       return { atomId: key.atomId, itemId: res.insertId };
     }
 
-    async write({ atomClass, key, item, validation, user }) {
+    async write({ atomClass, key, item, user }) {
     }
 
     async delete({ atomClass, key, user }) {

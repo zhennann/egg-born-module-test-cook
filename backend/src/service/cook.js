@@ -18,7 +18,7 @@ module.exports = app => {
       // select
     }
 
-    async write({ atomClass, key, item, validation, user }) {
+    async write({ atomClass, key, item, user }) {
       // update cook
       const res = await this.ctx.model.cook.update({
         id: key.itemId,
