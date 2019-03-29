@@ -57,6 +57,8 @@ module.exports = app => {
       { method: 'post', path: 'cookPublic/write', controller: cookPublic, middlewares: 'inner' },
       { method: 'post', path: 'cookPublic/delete', controller: cookPublic, middlewares: 'inner' },
       { method: 'post', path: 'test/httpLog', controller: test, middlewares: 'test,httpLog' },
+      // test user role
+      { method: 'get', path: 'test/userRole', controller: test, middlewares: 'test' },
     ]);
   }
   return routes;

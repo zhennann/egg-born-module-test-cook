@@ -512,6 +512,20 @@ module.exports = app => {
       this.ctx.success('this is a httpLog');
     }
 
+    async userRole() {
+      // userIds
+      const userIds = this.ctx.cache.mem.get('userIds');
+      //
+      let list = await this.ctx.meta.role.getUserRolesDirect({ userId: userIds.root });
+      assert.equal(list.length, 1);
+      list = await this.ctx.meta.role.getUserRolesParent({ userId: userIds.root });
+      assert.equal(list.length, 3);
+      list = await this.ctx.meta.role.getUserRolesExpand({ userId: userIds.root });
+      assert(list.length > 3);
+      //
+      this.ctx.success();
+    }
+
   }
 
   return TestController;

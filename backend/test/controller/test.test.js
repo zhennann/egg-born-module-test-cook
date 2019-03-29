@@ -178,4 +178,9 @@ describe('test/controller/test.test.js', () => {
     assert(result.body.code === 0);
   });
 
+  it('action:userRole', async () => {
+    const result = await app.httpRequest().get(mockUrl('test/userRole'));
+    assert(result.body.code === 0);
+  });
+
 });
