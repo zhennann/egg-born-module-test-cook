@@ -8,25 +8,25 @@ module.exports = app => {
     // right
 
     async checkRightCreate() {
-      this.ctx.success(this.ctx.request.body);
+      this.ctx.success(this.ctx.meta._atomClass);
     }
 
     async checkRightRead() {
-      this.ctx.success(this.ctx.request.body);
+      this.ctx.success(this.ctx.meta._atom);
     }
 
     async checkRightWrite() {
-      this.ctx.success(this.ctx.request.body);
+      this.ctx.success(this.ctx.meta._atom);
     }
 
     async checkRightAction() {
-      this.ctx.success(this.ctx.request.body);
+      this.ctx.success(this.ctx.meta._atom);
     }
 
     // function
 
     async checkRightFunctionUser() {
-      this.ctx.success(this.ctx.request.body);
+      this.ctx.success(this.ctx.meta._function);
     }
 
     async func() {

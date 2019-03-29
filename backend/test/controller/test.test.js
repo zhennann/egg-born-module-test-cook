@@ -28,7 +28,7 @@ describe('test/controller/test.test.js', () => {
       const result = await app.httpRequest().post(mockUrl('test/checkRightCreate')).send({
         atomClass: { module: mockInfo().relativeName, atomClassName: 'cook', atomClassIdParent: 0 },
       });
-      if (right) { assert(result.body.data._atomClass.id > 0); } else { assert(result.status === 403); }
+      if (right) { assert(result.body.data.id > 0); } else { assert(result.status === 403); }
     }
   });
 
@@ -60,7 +60,7 @@ describe('test/controller/test.test.js', () => {
       const result = await app.httpRequest().post(mockUrl('test/checkRightRead')).send({
         key: cookKey,
       });
-      if (right) { assert(result.body.data._atom.id === cookKey.atomId); } else { assert(result.status === 403); }
+      if (right) { assert(result.body.data.id === cookKey.atomId); } else { assert(result.status === 403); }
     }
 
     // check right write
@@ -76,7 +76,7 @@ describe('test/controller/test.test.js', () => {
       const result = await app.httpRequest().post(mockUrl('test/checkRightWrite')).send({
         key: cookKey,
       });
-      if (right) { assert(result.body.data._atom.id === cookKey.atomId); } else { assert(result.status === 403); }
+      if (right) { assert(result.body.data.id === cookKey.atomId); } else { assert(result.status === 403); }
     }
 
     // enable
@@ -102,7 +102,7 @@ describe('test/controller/test.test.js', () => {
       const result = await app.httpRequest().post(mockUrl('test/checkRightAction')).send({
         key: cookKey,
       });
-      if (right) { assert(result.body.data._atom.id === cookKey.atomId); } else { assert(result.status === 403); }
+      if (right) { assert(result.body.data.id === cookKey.atomId); } else { assert(result.status === 403); }
     }
 
     // customActionReview
@@ -146,7 +146,7 @@ describe('test/controller/test.test.js', () => {
         password: '123456',
       });
       const result = await app.httpRequest().post(mockUrl('test/checkRightFunctionUser'));
-      if (right) { assert(result.body.data._function.id > 0); } else { assert(result.status === 403); }
+      if (right) { assert(result.body.data.id > 0); } else { assert(result.status === 403); }
     }
   });
 
