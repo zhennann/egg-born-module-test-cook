@@ -133,6 +133,22 @@ module.exports = app => {
 // eslint-disable-next-line
 module.exports = appInfo => {
   const config = {};
+
+  if (appInfo.env === 'unittest') {
+    // startups
+    config.startups = {
+      startupAll: {
+        type: 'worker',
+        path: 'test/startupAll',
+      },
+      startupInstance: {
+        type: 'worker',
+        instance: true,
+        path: 'test/startupInstance',
+      },
+    };
+  }
+
   return config;
 };
 
@@ -245,6 +261,13 @@ module.exports = app => {
       { method: 'post', path: 'test/httpLog', controller: test, middlewares: 'test,httpLog' },
       // test user role
       { method: 'get', path: 'test/userRole', controller: test, middlewares: 'test' },
+      // test startup
+      { method: 'post', path: 'test/startupAll', controller: test, middlewares: 'inner',
+        meta: { instance: { enable: false } },
+      },
+      { method: 'post', path: 'test/startupInstance', controller: test, middlewares: 'inner',
+        meta: { auth: { enable: false } },
+      },
     ]);
   }
   return routes;
@@ -861,6 +884,16 @@ module.exports = app => {
       list = await this.ctx.meta.role.getUserRolesExpand({ userId: userIds.root });
       assert(list.length > 3);
       //
+      this.ctx.success();
+    }
+
+    async startupAll() {
+      console.log('startupAll: instance:', this.ctx.instance);
+      this.ctx.success();
+    }
+
+    async startupInstance() {
+      console.log('startupInstance: instance:', this.ctx.instance.id);
       this.ctx.success();
     }
 

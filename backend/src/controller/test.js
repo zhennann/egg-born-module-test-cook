@@ -526,6 +526,16 @@ module.exports = app => {
       this.ctx.success();
     }
 
+    async startupAll() {
+      console.log('startupAll: instance:', this.ctx.instance);
+      this.ctx.success();
+    }
+
+    async startupInstance() {
+      console.log('startupInstance: instance:', this.ctx.instance.id);
+      this.ctx.success();
+    }
+
   }
 
   return TestController;

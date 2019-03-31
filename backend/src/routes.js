@@ -59,6 +59,13 @@ module.exports = app => {
       { method: 'post', path: 'test/httpLog', controller: test, middlewares: 'test,httpLog' },
       // test user role
       { method: 'get', path: 'test/userRole', controller: test, middlewares: 'test' },
+      // test startup
+      { method: 'post', path: 'test/startupAll', controller: test, middlewares: 'inner',
+        meta: { instance: { enable: false } },
+      },
+      { method: 'post', path: 'test/startupInstance', controller: test, middlewares: 'inner',
+        meta: { auth: { enable: false } },
+      },
     ]);
   }
   return routes;
