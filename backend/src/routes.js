@@ -1,6 +1,7 @@
 const version = require('./controller/version.js');
 const cook = require('./controller/cook.js');
 const test = require('./controller/test.js');
+const test2 = require('./controller/test2.js');
 const cookPublic = require('./controller/cookPublic.js');
 
 module.exports = app => {
@@ -66,6 +67,8 @@ module.exports = app => {
       { method: 'post', path: 'test/startupInstance', controller: test, middlewares: 'inner',
         meta: { auth: { enable: false } },
       },
+      // test2 sendMail
+      { method: 'get', path: 'test2/sendMail', controller: test2, middlewares: 'mail,test' },
     ]);
   }
   return routes;
