@@ -13,8 +13,6 @@ module.exports = function(ctx) {
 
       await this._testRoleRights(roleIds);
 
-      await this._testAuths(userIds);
-
       this._testCache(roleIds, userIds);
     }
 
@@ -56,17 +54,28 @@ module.exports = function(ctx) {
 
     // users
     async _testUsers(roleIds) {
+      // userIds
       const userIds = {};
       for (const [ userName, roleName ] of testData.users) {
+        // add
         userIds[userName] = await ctx.meta.user.add({
           userName,
           realName: userName,
         });
+        // activated
+        await ctx.meta.user.save({
+          user: { id: userIds[userName], activated: 1 },
+        });
+        // role
         await ctx.meta.role.addUserRole({
           userId: userIds[userName],
           roleId: roleIds[roleName],
         });
       }
+
+      // auths
+      await this._testAuths(userIds);
+
       // root
       const userRoot = await ctx.meta.user.get({ userName: 'root' });
       userIds.root = userRoot.id;
