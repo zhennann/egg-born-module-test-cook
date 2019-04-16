@@ -106,11 +106,11 @@ module.exports = app => {
   // routes
   const routes = __webpack_require__(7)(app);
   // services
-  const services = __webpack_require__(12)(app);
+  const services = __webpack_require__(13)(app);
   // models
-  const models = __webpack_require__(18)(app);
+  const models = __webpack_require__(19)(app);
   // meta
-  const meta = __webpack_require__(22)(app);
+  const meta = __webpack_require__(23)(app);
 
   return {
     routes,
@@ -203,7 +203,8 @@ module.exports = {
 const version = __webpack_require__(8);
 const cook = __webpack_require__(9);
 const test = __webpack_require__(10);
-const cookPublic = __webpack_require__(11);
+const test2 = __webpack_require__(11);
+const cookPublic = __webpack_require__(12);
 
 module.exports = app => {
   let routes = [
@@ -268,6 +269,8 @@ module.exports = app => {
       { method: 'post', path: 'test/startupInstance', controller: test, middlewares: 'inner',
         meta: { auth: { enable: false } },
       },
+      // test2 sendMail
+      { method: 'get', path: 'test2/sendMail', controller: test2, middlewares: 'mail,test' },
     ]);
   }
   return routes;
@@ -905,6 +908,39 @@ module.exports = app => {
 
 /***/ }),
 /* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const require3 = __webpack_require__(0);
+const assert = require3('assert');
+
+module.exports = app => {
+
+  class Test2Controller extends app.Controller {
+
+    // sendMail
+    async sendMail() {
+      // send
+      await this.ctx.meta.mail.send({
+        scene: 'test',
+        message: {
+          to: 'test@cabloy.com',
+          subject: 'this is a test',
+          text: 'message body!',
+        },
+      });
+      // ok
+      this.ctx.success();
+    }
+
+  }
+
+  return Test2Controller;
+
+};
+
+
+/***/ }),
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = app => {
@@ -933,12 +969,12 @@ module.exports = app => {
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const version = __webpack_require__(13);
-const cook = __webpack_require__(16);
-const cookPublic = __webpack_require__(17);
+const version = __webpack_require__(14);
+const cook = __webpack_require__(17);
+const cookPublic = __webpack_require__(18);
 
 module.exports = app => {
   const services = {
@@ -955,10 +991,10 @@ module.exports = app => {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const VersionTestFn = __webpack_require__(14);
+const VersionTestFn = __webpack_require__(15);
 
 module.exports = app => {
 
@@ -1039,11 +1075,11 @@ module.exports = app => {
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-const testData = __webpack_require__(15);
+const testData = __webpack_require__(16);
 
 module.exports = function(ctx) {
 
@@ -1056,8 +1092,6 @@ module.exports = function(ctx) {
       const userIds = await this._testUsers(roleIds);
 
       await this._testRoleRights(roleIds);
-
-      await this._testAuths(userIds);
 
       this._testCache(roleIds, userIds);
     }
@@ -1100,17 +1134,28 @@ module.exports = function(ctx) {
 
     // users
     async _testUsers(roleIds) {
+      // userIds
       const userIds = {};
       for (const [ userName, roleName ] of testData.users) {
+        // add
         userIds[userName] = await ctx.meta.user.add({
           userName,
           realName: userName,
         });
+        // activated
+        await ctx.meta.user.save({
+          user: { id: userIds[userName], activated: 1 },
+        });
+        // role
         await ctx.meta.role.addUserRole({
           userId: userIds[userName],
           roleId: roleIds[roleName],
         });
       }
+
+      // auths
+      await this._testAuths(userIds);
+
       // root
       const userRoot = await ctx.meta.user.get({ userName: 'root' });
       userIds.root = userRoot.id;
@@ -1153,7 +1198,7 @@ module.exports = function(ctx) {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 // roleName, leader, catalog, roleNameParent
@@ -1206,7 +1251,7 @@ module.exports = {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = app => {
@@ -1288,7 +1333,7 @@ module.exports = app => {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = app => {
@@ -1319,12 +1364,12 @@ module.exports = app => {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const cook = __webpack_require__(19);
-const cookType = __webpack_require__(20);
-const cookPublic = __webpack_require__(21);
+const cook = __webpack_require__(20);
+const cookType = __webpack_require__(21);
+const cookPublic = __webpack_require__(22);
 
 module.exports = app => {
   const models = {
@@ -1341,7 +1386,7 @@ module.exports = app => {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 module.exports = app => {
@@ -1359,7 +1404,7 @@ module.exports = app => {
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports) {
 
 module.exports = app => {
@@ -1377,7 +1422,7 @@ module.exports = app => {
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports) {
 
 module.exports = app => {
@@ -1395,7 +1440,7 @@ module.exports = app => {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const require3 = __webpack_require__(0);
@@ -1406,7 +1451,7 @@ module.exports = app => {
   };
   if (app.meta.isTest || app.meta.isLocal) {
     // schemas
-    const schemas = __webpack_require__(23)(app);
+    const schemas = __webpack_require__(24)(app);
     // meta
     extend(true, meta, {
       base: {
@@ -1508,7 +1553,7 @@ module.exports = app => {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = app => {
