@@ -510,6 +510,7 @@ module.exports = app => {
         method: 'get',
         url: 'test/echo1',
       });
+      this.ctx.session.__dbMetaNext = true;
       assert(res.user.op.id === this.ctx.user.op.id);
       assert(res.instance.id === this.ctx.instance.id);
       assert(JSON.stringify(res.subdomains) === JSON.stringify(this.ctx.subdomains));
@@ -524,6 +525,11 @@ module.exports = app => {
       this.ctx.success(res);
     }
     async echo2() {
+      //
+      await this.ctx.dbMeta.next(async () => {
+        assert.equal(this.ctx.session.__dbMetaNext, true);
+      });
+      //
       this.ctx.success({
         user: this.ctx.user,
         instance: this.ctx.instance,
@@ -854,7 +860,8 @@ module.exports = app => {
 
     async eventUserVerify() {
       const data = this.ctx.request.body.data;
-      console.log('onUserVerify profileId: ', data.profileUser.profileId);
+      // console.log('onUserVerify profileId: ', data.profileUser.profileId);
+      assert(data.profileUser.profileId > 0);
       this.ctx.success();
     }
 
@@ -891,12 +898,12 @@ module.exports = app => {
     }
 
     async startupAll() {
-      console.log('startupAll: instance:', this.ctx.instance);
+      assert.equal(this.ctx.instance, undefined);
       this.ctx.success();
     }
 
     async startupInstance() {
-      console.log('startupInstance: instance:', this.ctx.instance.id);
+      assert(this.ctx.instance.id > 0);
       this.ctx.success();
     }
 
