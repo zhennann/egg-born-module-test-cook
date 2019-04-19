@@ -14,13 +14,18 @@ module.exports = app => {
   if (app.meta.isTest || app.meta.isLocal) {
     routes = routes.concat([
       // cook
-      { method: 'post', path: 'cook/create', controller: cook, middlewares: 'inner' },
-      { method: 'post', path: 'cook/read', controller: cook, middlewares: 'inner' },
-      { method: 'post', path: 'cook/select', controller: cook, middlewares: 'inner' },
-      { method: 'post', path: 'cook/write', controller: cook, middlewares: 'inner' },
-      { method: 'post', path: 'cook/delete', controller: cook, middlewares: 'inner' },
-      { method: 'post', path: 'cook/action', controller: cook, middlewares: 'inner' },
-      { method: 'post', path: 'cook/enable', controller: cook, middlewares: 'inner' },
+      { method: 'post', path: 'cook/create', controller: cook, middlewares: 'inner', meta: { auth: { enable: false } } },
+      { method: 'post', path: 'cook/read', controller: cook, middlewares: 'inner', meta: { auth: { enable: false } } },
+      { method: 'post', path: 'cook/select', controller: cook, middlewares: 'inner', meta: { auth: { enable: false } } },
+      { method: 'post', path: 'cook/write', controller: cook, middlewares: 'inner,validate',
+        meta: {
+          auth: { enable: false },
+          validate: { validator: 'cook', data: 'item' },
+        },
+      },
+      { method: 'post', path: 'cook/delete', controller: cook, middlewares: 'inner', meta: { auth: { enable: false } } },
+      { method: 'post', path: 'cook/action', controller: cook, middlewares: 'inner', meta: { auth: { enable: false } } },
+      { method: 'post', path: 'cook/enable', controller: cook, middlewares: 'inner', meta: { auth: { enable: false } } },
       { method: 'post', path: 'cook/types', controller: cook },
       // test echo
       { method: 'get', path: 'test/echo/:id', controller: test, action: 'echo', middlewares: 'test,transaction' },
@@ -54,9 +59,9 @@ module.exports = app => {
       { method: 'post', path: 'test/eventUserVerify', controller: test, middlewares: 'test', meta: { auth: { enable: false } } },
       // test atom public
       { method: 'get', path: 'test/atomPublic', controller: test, middlewares: 'test' },
-      { method: 'post', path: 'cookPublic/create', controller: cookPublic, middlewares: 'inner' },
-      { method: 'post', path: 'cookPublic/write', controller: cookPublic, middlewares: 'inner' },
-      { method: 'post', path: 'cookPublic/delete', controller: cookPublic, middlewares: 'inner' },
+      { method: 'post', path: 'cookPublic/create', controller: cookPublic, middlewares: 'inner', meta: { auth: { enable: false } } },
+      { method: 'post', path: 'cookPublic/write', controller: cookPublic, middlewares: 'inner', meta: { auth: { enable: false } } },
+      { method: 'post', path: 'cookPublic/delete', controller: cookPublic, middlewares: 'inner', meta: { auth: { enable: false } } },
       { method: 'post', path: 'test/httpLog', controller: test, middlewares: 'test,httpLog' },
       // test user role
       { method: 'get', path: 'test/userRole', controller: test, middlewares: 'test' },

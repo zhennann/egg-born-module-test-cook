@@ -161,11 +161,11 @@ module.exports = app => {
       this.ctx.success(res);
     }
     async echo2() {
-      //
-      await this.ctx.dbMeta.next(async () => {
+      // tail
+      this.ctx.tail(async () => {
         assert.equal(this.ctx.session.__dbMetaNext, true);
       });
-      //
+      // ok
       this.ctx.success({
         user: this.ctx.user,
         instance: this.ctx.instance,
