@@ -147,9 +147,9 @@ module.exports = app => {
         url: 'test/echo1',
       });
       this.ctx.session.__dbMetaNext = true;
-      assert(res.user.op.id === this.ctx.user.op.id);
-      assert(res.instance.id === this.ctx.instance.id);
-      assert(JSON.stringify(res.subdomains) === JSON.stringify(this.ctx.subdomains));
+      assert.equal(res.user.op.id, this.ctx.user.op.id);
+      assert.equal(res.instance.id, this.ctx.instance.id);
+      assert.equal(JSON.stringify(res.subdomains), JSON.stringify(this.ctx.subdomains));
       assert(res.route.action !== this.ctx.route.action);
       this.ctx.success(res);
     }

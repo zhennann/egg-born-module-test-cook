@@ -150,7 +150,7 @@ describe('test/controller/test.test.js', () => {
     }
   });
 
-  it('actin:echo', async () => {
+  it('action:echo', async () => {
     app.mockSession({});
     const result = await app.httpRequest().get(mockUrl('test/echo/1'));
     assert(result.body.code === 0);
