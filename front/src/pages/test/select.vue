@@ -1,11 +1,11 @@
 <template>
   <eb-page>
     <eb-navbar :title="$text('Select')" eb-back-link="Back"></eb-navbar>
-    <f7-list form no-hairlines-md>
+    <eb-list form no-hairlines-md @submit.prevent="onFormSubmit">
       <f7-list-item smartSelect :title="$text('Sex')" :smartSelectParams="{openIn: 'page', closeOnSelect: true}">
         <eb-select name="sex" v-model="sex" optionsBlankAuto :multiple="false" :options="sexes"></eb-select>
       </f7-list-item>
-    </f7-list>
+    </eb-list>
     <div>{{sex}}</div>
   </eb-page>
 </template>
@@ -22,7 +22,9 @@ export default {
     };
   },
   methods: {
-
+    onFormSubmit(event) {
+      console.log(event);
+    },
   },
 };
 

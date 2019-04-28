@@ -218,12 +218,12 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 
-// CONCATENATED MODULE: /Users/wind/Documents/data/cabloy/egg-born-demo/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!/Users/wind/Documents/data/cabloy/egg-born-demo/node_modules/vue-loader/lib??vue-loader-options!./front/src/pages/test/select.vue?vue&type=template&id=48febcc7&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('eb-page',[_c('eb-navbar',{attrs:{"title":_vm.$text('Select'),"eb-back-link":"Back"}}),_vm._v(" "),_c('f7-list',{attrs:{"form":"","no-hairlines-md":""}},[_c('f7-list-item',{attrs:{"smartSelect":"","title":_vm.$text('Sex'),"smartSelectParams":{openIn: 'page', closeOnSelect: true}}},[_c('eb-select',{attrs:{"name":"sex","optionsBlankAuto":"","multiple":false,"options":_vm.sexes},model:{value:(_vm.sex),callback:function ($$v) {_vm.sex=$$v},expression:"sex"}})],1)],1),_vm._v(" "),_c('div',[_vm._v(_vm._s(_vm.sex))])],1)}
+// CONCATENATED MODULE: /Users/wind/Documents/data/cabloy/egg-born-demo/node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!/Users/wind/Documents/data/cabloy/egg-born-demo/node_modules/vue-loader/lib??vue-loader-options!./front/src/pages/test/select.vue?vue&type=template&id=fe418fa0&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('eb-page',[_c('eb-navbar',{attrs:{"title":_vm.$text('Select'),"eb-back-link":"Back"}}),_vm._v(" "),_c('eb-list',{attrs:{"form":"","no-hairlines-md":""},on:{"submit":function($event){$event.preventDefault();return _vm.onFormSubmit($event)}}},[_c('f7-list-item',{attrs:{"smartSelect":"","title":_vm.$text('Sex'),"smartSelectParams":{openIn: 'page', closeOnSelect: true}}},[_c('eb-select',{attrs:{"name":"sex","optionsBlankAuto":"","multiple":false,"options":_vm.sexes},model:{value:(_vm.sex),callback:function ($$v) {_vm.sex=$$v},expression:"sex"}})],1)],1),_vm._v(" "),_c('div',[_vm._v(_vm._s(_vm.sex))])],1)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./front/src/pages/test/select.vue?vue&type=template&id=48febcc7&
+// CONCATENATED MODULE: ./front/src/pages/test/select.vue?vue&type=template&id=fe418fa0&
 
 // CONCATENATED MODULE: /Users/wind/Documents/data/cabloy/egg-born-demo/node_modules/babel-loader/lib!/Users/wind/Documents/data/cabloy/egg-born-demo/node_modules/vue-loader/lib??vue-loader-options!./front/src/pages/test/select.vue?vue&type=script&lang=js&
 /* harmony default export */ var selectvue_type_script_lang_js_ = ({
@@ -240,7 +240,11 @@ var staticRenderFns = []
       }]
     };
   },
-  methods: {}
+  methods: {
+    onFormSubmit: function onFormSubmit(event) {
+      console.log(event);
+    }
+  }
 });
 // CONCATENATED MODULE: ./front/src/pages/test/select.vue?vue&type=script&lang=js&
  /* harmony default export */ var test_selectvue_type_script_lang_js_ = (selectvue_type_script_lang_js_); 
