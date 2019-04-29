@@ -22,7 +22,7 @@ describe('test/controller/auth.test.js', () => {
     // echo again
     result = await app.httpRequest().post(mockUrl('/a/base/auth/echo'));
     const op3 = result.body.data.user.op;
-    assert(op3.id > op2.id);
+    assert(op3.id === op2.id);
 
   });
 

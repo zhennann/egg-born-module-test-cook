@@ -8,7 +8,7 @@ module.exports = function(ctx) {
     async run() {
       const roleIds = await this._testRoles();
       await this._testRoleIncs(roleIds);
-      await ctx.meta.role.build();
+      await ctx.meta.role.setDirty(true);
       const userIds = await this._testUsers(roleIds);
 
       await this._testRoleRights(roleIds);
