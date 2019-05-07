@@ -152,7 +152,19 @@ describe('test/controller/test.test.js', () => {
 
   it('action:echo', async () => {
     app.mockSession({});
-    const result = await app.httpRequest().get(mockUrl('test/echo/1'));
+
+    // anonymous
+    let result = await app.httpRequest().get(mockUrl('test/echo/1'));
+    assert(result.body.code === 0);
+
+    // login
+    await app.httpRequest().post(mockUrl('/a/authsimple/passport/a-authsimple/authsimple')).send({
+      auth: 'root',
+      password: '123456',
+    });
+
+    // test again
+    result = await app.httpRequest().get(mockUrl('test/echo/1'));
     assert(result.body.code === 0);
   });
 
